@@ -2,6 +2,7 @@ import { Component } from "react";
 
 class Arrays extends Component {
   state = {
+    counter: 0,
     posts: [
       {
         id: 1,
@@ -20,14 +21,37 @@ class Arrays extends Component {
       },
     ]
   }
+  timeOut = null
+
+  componentDidMount() {
+    this.handleTimeOut()  
+  }
+
+  componentDidUpdate() {
+    this.handleTimeOut()
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeOut)
+  }
+
+  handleTimeOut = () => {
+    const { posts, counter } = this.state
+    posts[0].title = 'O titulo mudou!'
+ 
+    this.timeOut = setTimeout(() => {
+      this.setState({ posts, counter: counter + 1 })
+    }, 1000)
+  }
 
   render() {
 
-    const { posts } = this.state
+    const { posts, counter } = this.state
 
     return (
       <>
         <h1>Arrays page</h1>
+        <h1>{ counter }</h1>
         { posts.map(({ title, body, id }) => {
           return (
             <div key={id}>
