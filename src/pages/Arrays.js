@@ -3,64 +3,49 @@ import { Component } from "react";
 class Arrays extends Component {
   state = {
     counter: 0,
-    posts: [
-      {
-        id: 1,
-        title: "O titulo 1",
-        body: "O corpo 1"
-      },
-      {
-        id: 2,
-        title: "O titulo 2",
-        body: "O corpo 2"
-      },
-      {
-        id: 3,
-        title: "O titulo 3",
-        body: "O corpo 3"
-      },
-    ]
+    posts: []
   }
-  timeOut = null
 
   componentDidMount() {
-    this.handleTimeOut()  
+    this.loadpost()
   }
 
-  componentDidUpdate() {
-    this.handleTimeOut()
-  }
+  loadpost = async () => {
+    const postsResponse = fetch('https://jsonplaceholder.typicode.com/posts')
+    const photosResponse = fetch('https://jsonplaceholder.typicode.com/photos')
 
-  componentWillUnmount() {
-    clearTimeout(this.timeOut)
-  }
+    const [posts, photos] = await Promise.all([postsResponse, photosResponse])
 
-  handleTimeOut = () => {
-    const { posts, counter } = this.state
-    posts[0].title = 'O titulo mudou!'
- 
-    this.timeOut = setTimeout(() => {
-      this.setState({ posts, counter: counter + 1 })
-    }, 1000)
+    const postsJson = await posts.json()
+    const photosJson = await photos.json()
+
+    const postsAndPhotos = postsJson.map((post, index) => {
+      return { ...post, cover: photosJson[index].url }
+    })
+
+    this.setState({ posts: postsAndPhotos })
   }
 
   render() {
 
-    const { posts, counter } = this.state
+    const { posts } = this.state
 
     return (
-      <>
-        <h1>Arrays page</h1>
-        <h1>{ counter }</h1>
-        { posts.map(({ title, body, id }) => {
-          return (
-            <div key={id}>
-              <h1>{ title }</h1>
-              <p>{ body }</p>
-            </div>
-          )
-        }) }
-      </>
+      <section className='container'>
+        <div className='posts'>
+          { posts.map((post) => {
+            return (
+              <div className='post'>
+                <img src={post.cover} alt={post.title} />
+                <div className='post-card' key={post.id}>
+                  <h1>{ post.title }</h1>
+                  <p>{ post.body }</p>
+                </div>
+              </div>
+            )
+          }) }
+        </div>
+      </section>
     )
   }
 }
