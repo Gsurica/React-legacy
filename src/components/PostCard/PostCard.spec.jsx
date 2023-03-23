@@ -12,4 +12,9 @@ describe('<PostCard />', () => {
     expect(screen.getByRole('heading', { name: /something/i })).toBeInTheDocument()
     expect(screen.getByText(/body 1/i)).toBeInTheDocument()
   })
+
+  it('should match the component snapshot', () => {
+    const { container } = render(<PostCard {...props} />)
+    expect(container.firstChild).toMatchSnapshot()
+  })
 })
