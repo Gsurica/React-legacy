@@ -34,8 +34,15 @@ describe('<Posts />', () => {
     expect(screen.getByRole('img', { name: /title 3/i })).toHaveAttribute('src', 'testing image 3')
   }) 
 
+  it('should render posts empty', () => {
+    render(<Posts />)
+
+    expect(screen.queryByRole('heading', { name: /title/i })).not.toBeInTheDocument()
+  })
+
   it('should match the posts snapshot', () => {
     const { container } = render(<Posts {...props} />) 
     expect(container.firstChild).toMatchSnapshot()
   })
+
 })
