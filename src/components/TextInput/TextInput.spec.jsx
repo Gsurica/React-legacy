@@ -22,4 +22,11 @@ describe('<TextInput />', () => {
     expect(input.value).toBe(value)
     expect(fn).toHaveBeenCalledTimes(value.length)
   })  
+
+  it('should match the input snapshoot', () => {
+    const fn = jest.fn()
+    const { container } = render(<TextINput handleChange={fn} searchValue={'test'} />)
+    
+    expect(container.firstChild).toMatchSnapshot()
+  }) 
 })
